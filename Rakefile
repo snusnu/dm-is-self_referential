@@ -1,11 +1,19 @@
 require 'rubygems'
+require 'pathname'
 require 'rake'
+
+GEM_NAME = 'dm-is-self_referential'
+
+ROOT = Pathname(__FILE__).dirname.expand_path
+JRUBY = RUBY_PLATFORM =~ /java/
+WINDOWS = Gem.win_platform?
+SUDO = (WINDOWS || JRUBY) ? '' : ('sudo' unless ENV['SUDOLESS'])
 
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "dm-is-self_referential"
-    gem.summary = %Q{TODO}
+    gem.summary = %Q{Declaratively specify self referential m:m relationships in datamapper models}
     gem.email = "gamsnjaga@gmail.com"
     gem.homepage = "http://github.com/snusnu/dm-is-self_referential"
     gem.authors = ["snusnu"]
@@ -16,18 +24,30 @@ rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
 end
 
-require 'spec/rake/spectask'
-Spec::Rake::SpecTask.new(:spec) do |spec|
-  spec.libs << 'lib' << 'spec'
-  spec.spec_files = FileList['spec/**/*_spec.rb']
-end
+begin
 
-Spec::Rake::SpecTask.new(:rcov) do |spec|
-  spec.libs << 'lib' << 'spec'
-  spec.pattern = 'spec/**/*_spec.rb'
-  spec.rcov = true
-end
+  require 'spec'
+  require 'spec/rake/spectask'
 
+  task :default => [ :spec ]
+
+  desc 'Run specifications'
+  Spec::Rake::SpecTask.new(:spec) do |t|
+    t.spec_opts << '--options' << 'spec/spec.opts' if File.exists?('spec/spec.opts')
+    t.spec_files = Pathname.glob((ROOT + 'spec/**/*_spec.rb').to_s).map { |f| f.to_s }
+
+    begin
+      t.rcov = JRUBY ? false : (ENV.has_key?('NO_RCOV') ? ENV['NO_RCOV'] != 'true' : true)
+      t.rcov_opts << '--exclude' << 'spec'
+      t.rcov_opts << '--text-summary'
+      t.rcov_opts << '--sort' << 'coverage' << '--sort-reverse'
+    rescue LoadError
+      # rcov not installed
+    end
+  end
+rescue LoadError
+  # rspec not installed
+end
 
 task :default => :spec
 
@@ -46,3 +66,5 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
+# require all tasks below tasks
+Pathname.glob(ROOT.join('tasks/**/*.rb').to_s).each { |f| require f }

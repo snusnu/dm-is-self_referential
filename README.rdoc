@@ -1,7 +1,108 @@
 = dm-is-self_referential
 
-Description goes here.
+A datamapper[http://github.com/datamapper/dm-core] plugin that allows declarative specification of self referential m:m relationships.
+
+== Examples
+
+  class User
+
+    include DataMapper::Resource
+
+    property :id, Serial
+    property :name, String, :nullable => false, :unique => true, :unique_index => true
+
+    # with default options
+    #
+    # will define and thus be able to automigrate the UserToUser model
+    # with the following relationships established between the participating models
+    #
+    #   has n, :user_children, 'UserToUser', :child_key => [ :source_id ]
+    #   has n, :user_parents,  'UserToUser', :child_key => [ :target_id ]
+    #
+    # once dm-core has full support for the following m:m relationships built in,
+    # these will also get established.
+    #
+    #   has n, :children, self, :through => :user_children, :via => :target
+    #   has n, :parents , self, :through => :user_parents,  :via => :source
+    #
+    # In the meantime, the following helper methods get defined
+    #
+    #   def children
+    #     children_ids = self.user_children.map { |r| r.target_id }
+    #     self.class.all(:id => children_ids)
+    #   end
+    #
+    #   def parents
+    #     parent_ids = self.user_parents.map { |r| r.source_id }
+    #     self.class.all(:id => parent_ids)
+    #   end
+    #
+    is :self_referential
+
+
+    # With explicit intermediate model name and default options
+    #
+    # Will define and thus be able to automigrate the Friendship model
+    # with the following relationships established between the participating models
+    #
+    #   has n, :user_children, 'Friendship', :child_key => [ :source_id ]
+    #   has n, :user_parents,  'Friendship', :child_key => [ :target_id ]
+    #
+    # Once dm-core has full support for the following m:m relationships built in,
+    # these will also get established.
+    #
+    #   has n, :children, self, :through => :user_children, :via => :target
+    #   has n, :parents , self, :through => :user_parents,  :via => :source
+    #
+    # In the meantime, the following helper methods get defined
+    #
+    #   def children
+    #     children_ids = self.user_children.map { |r| r.target_id }
+    #     self.class.all(:id => children_ids)
+    #   end
+    #
+    #   def parents
+    #     parent_ids = self.user_parents.map { |r| r.source_id }
+    #     self.class.all(:id => parent_ids)
+    #   end
+    #
+    is :self_referential, :through => 'Friendship'
+
+
+    # With explicit intermediate model name and customized options
+    #
+    # Will define and thus be able to automigrate the UserRelationship model
+    # with the following relationships established between the participating models
+    #
+    #   has n, :user_children, 'UserRelationship', :child_key => [ :parent_user_id ]
+    #   has n, :user_parents,  'UserRelationship', :child_key => [ :child_user_id  ]
+    #
+    # Once dm-core has full support for the following m:m relationships built in,
+    # these will also get established.
+    #
+    #   has n, :child_users,  User, :through => :user_children, :via => :child_user
+    #   has n, :parent_users, User, :through => :user_parents,  :via => :parent_user
+    #
+    # In the meantime, the following helper methods get defined
+    #
+    #   def child_users
+    #     children_ids = self.user_children.map { |r| r.target_id }
+    #     self.class.all(:id => children_ids)
+    #   end
+    #
+    #   def parent_users
+    #     parent_ids = self.user_parents.map { |r| r.source_id }
+    #     self.class.all(:id => parent_ids)
+    #   end
+    #
+    is :self_referential, :through => 'UserRelationship',
+      :children => :child_users,
+      :parents  => :parent_users,
+      :source   => :parent_user,
+      :target   => :child_user
+
+  end
 
 == Copyright
 
-Copyright (c) 2009 snusnu. See LICENSE for details.
+Copyright (c) 2009 Martin Gamsjaeger (snusnu). See LICENSE for details.
