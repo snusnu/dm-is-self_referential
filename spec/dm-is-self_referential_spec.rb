@@ -38,10 +38,8 @@ describe 'every self referential m:m relationship', :shared => true do
   end
 
   it "should establish a m:m relationship to the target model" do
-    pending "dm-core currently doesn't fully support self referential m:m relationships" do
-      relationship = @model.relationships(:default)[@target_name]
-      relationship.is_a?(DataMapper::Associations::ManyToMany::Relationship).should be_true
-    end
+    relationship = @model.relationships(:default)[@target_name]
+    relationship.is_a?(DataMapper::Associations::ManyToMany::Relationship).should be_true
   end
 
 
