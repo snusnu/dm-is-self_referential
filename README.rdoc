@@ -2,11 +2,6 @@
 
 A datamapper[http://github.com/datamapper/dm-core] plugin that allows declarative specification of self referential m:m relationships.
 
-== Status
-
-  24 examples, 0 failures, 3 pending
-  95.7%   1 file(s)   66 Lines   47 LOC (the uncovered part is what's not supported by dm-core atm)
-
 == Examples
 
   class User
