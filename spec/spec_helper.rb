@@ -6,6 +6,7 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'rubygems'
 
 require 'dm-core'
+require 'dm-migrations'
 require 'dm-validations'
 require 'dm-is-self_referential'
 
@@ -17,18 +18,16 @@ ENV["POSTGRES_SPEC_URI"] ||= 'postgres://postgres@localhost/dm-is-self_referenti
 def setup_adapter(name, default_uri = nil)
   begin
     DataMapper.setup(name, ENV["#{ENV['ADAPTER'].to_s.upcase}_SPEC_URI"] || default_uri)
-    Object.const_set('ADAPTER', ENV['ADAPTER'].to_sym) if name.to_s == ENV['ADAPTER']
     true
   rescue Exception => e
     if name.to_s == ENV['ADAPTER']
-      Object.const_set('ADAPTER', nil)
       warn "Could not load do_#{name}: #{e}"
     end
     false
   end
 end
 
-ENV['ADAPTER'] ||= 'mysql'
+ENV['ADAPTER'] ||= 'sqlite3'
 
 # have the logger handy ...
 # DataMapper::Logger.new(STDOUT, :debug)

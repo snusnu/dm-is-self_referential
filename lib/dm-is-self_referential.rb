@@ -1,3 +1,16 @@
+require 'dm-core'
+
+begin
+  require 'active_support/inflector'
+rescue LoadError
+  require 'extlib/inflection'
+  class String
+    def underscore
+      Extlib::Inflection.underscore(self)
+    end
+  end
+end
+
 module DataMapper
   module Is
 
@@ -19,8 +32,8 @@ module DataMapper
         intermediate_model = Object.full_const_set(options[:through], Class.new)
         target_model       = self
 
-        source_fk = Extlib::Inflection.foreign_key(options[:source]).to_sym
-        target_fk = Extlib::Inflection.foreign_key(options[:target]).to_sym
+        source_fk = ActiveSupport::Inflector.foreign_key(options[:source]).to_sym
+        target_fk = ActiveSupport::Inflector.foreign_key(options[:target]).to_sym
 
         intermediate_model.class_eval do
           include DataMapper::Resource
@@ -30,8 +43,8 @@ module DataMapper
           belongs_to options[:target], target_model
         end
 
-        intermediate_children = "#{self.name.snake_case}_#{options[:children]}".to_sym
-        intermediate_parents  = "#{self.name.snake_case}_#{options[:parents ]}".to_sym
+        intermediate_children = "#{self.name.underscore}_#{options[:children]}".to_sym
+        intermediate_parents  = "#{self.name.underscore}_#{options[:parents ]}".to_sym
 
         has n, intermediate_children, intermediate_model, :child_key => [ source_fk ]
         has n, intermediate_parents,  intermediate_model, :child_key => [ target_fk ]

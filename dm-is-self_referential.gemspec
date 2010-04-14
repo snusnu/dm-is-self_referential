@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["snusnu"]
-  s.date = %q{2010-01-11}
+  s.date = %q{2010-04-14}
   s.email = %q{gamsnjaga@gmail.com}
   s.extra_rdoc_files = [
     "LICENSE",
@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
   s.files = [
     ".document",
      ".gitignore",
+     "Gemfile",
      "LICENSE",
      "README.rdoc",
      "Rakefile",
@@ -31,7 +32,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/snusnu/dm-is-self_referential}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.5}
+  s.rubygems_version = %q{1.3.6}
   s.summary = %q{Declaratively specify self referential m:m relationships in datamapper models}
   s.test_files = [
     "spec/dm-is-self_referential_spec.rb",
