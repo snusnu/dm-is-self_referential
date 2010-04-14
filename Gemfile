@@ -15,11 +15,14 @@ else
 end
 
 gem 'dm-do-adapter',     '~> 0.10.3', :git => 'git://github.com/datamapper/dm-do-adapter.git'
+gem 'dm-validations',    '~> 0.10.3', :git => 'git://github.com/datamapper/dm-validations.git'
 
 
-# These are the only real toplevel dependencies
+# We need these for specs
 
-gem 'dm-core',           '~> 0.10.3', :git => 'git://github.com/datamapper/dm-core.git'
 gem 'dm-migrations',     '~> 0.10.3', :git => 'git://github.com/datamapper/dm-migrations.git'
 gem 'dm-sqlite-adapter', '~> 0.10.3', :git => 'git://github.com/datamapper/dm-sqlite-adapter.git'
-gem 'dm-validations',    '~> 0.10.3', :git => 'git://github.com/datamapper/dm-validations.git'
+
+# This are the only real toplevel dependencies
+
+gem 'dm-core',           '~> 0.10.3', :git => 'git://github.com/datamapper/dm-core.git'
