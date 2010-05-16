@@ -37,10 +37,8 @@ module DataMapper
 
         intermediate_model.class_eval do
           include DataMapper::Resource
-          property source_fk, Integer, :key => true
-          property target_fk, Integer, :key => true
-          belongs_to options[:source], source_model
-          belongs_to options[:target], target_model
+          belongs_to options[:source], source_model, :key => true
+          belongs_to options[:target], target_model, :key => true
         end
 
         intermediate_children = "#{self.name.underscore}_#{options[:children]}".to_sym
