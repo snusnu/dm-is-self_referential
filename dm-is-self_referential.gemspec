@@ -30,8 +30,12 @@ Gem::Specification.new do |s|
      "spec/rcov.opts",
      "spec/spec.opts",
      "spec/spec_helper.rb",
+     "tasks/ci.rake",
      "tasks/local_gemfile.rake",
-     "tasks/spec.rake"
+     "tasks/metrics.rake",
+     "tasks/spec.rake",
+     "tasks/yard.rake",
+     "tasks/yardstick.rake"
   ]
   s.homepage = %q{http://github.com/snusnu/dm-is-self_referential}
   s.rdoc_options = ["--charset=UTF-8"]
