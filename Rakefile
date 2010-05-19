@@ -12,7 +12,7 @@ begin
     gem.homepage    = 'http://github.com/snusnu/dm-is-self_referential'
     gem.authors     = [ "Martin Gamsjaeger (snusnu)" ]
 
-    gem.add_dependency             'dm-core', '~> 0.10.3'
+    gem.add_dependency             'dm-core', '~> 1.0.0.rc1'
 
     gem.add_development_dependency 'rspec',   '~> 1.3'
     gem.add_development_dependency 'yard',    '~> 0.5'
