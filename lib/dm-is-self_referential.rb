@@ -1,16 +1,5 @@
 require 'dm-core'
 
-begin
-  require 'active_support/inflector'
-rescue LoadError
-  require 'extlib/inflection'
-  class String
-    def underscore
-      Extlib::Inflection.underscore(self)
-    end
-  end
-end
-
 module DataMapper
   module Is
 
