@@ -12,8 +12,14 @@ module RemixableHelper
 
   def clear_remixed_models(*models)
     models.each do |model|
-      # TODO think about removing a namespaced constant
-      Object.send(:remove_const, model) if Object.full_const_defined?(model)
+      deepest_context, removable_const = (model =~ /^(.*::)(.*)$/) ? [$1, $2] : ["Object", model]
+
+      if Object.full_const_defined?(model)
+        if Object.full_const_defined?(deepest_context)
+          deepest_context = Object.full_const_get(deepest_context)
+          deepest_context.send(:remove_const, removable_const)
+        end
+      end
     end
   end
 
@@ -28,6 +34,22 @@ class User
   property :id, Serial
   property :name, String, :required => true, :unique => true, :unique_index => true
 
+end
+
+module Main
+  class Group
+    include DataMapper::Resource
+
+    property :id, Serial
+    property :name, String, :required => true
+  end
+
+  class GroupHeritage
+    include DataMapper::Resource
+
+    property :parent_group_id, Integer, :key => true
+    property :child_group_id, Integer, :key => true
+  end
 end
 
 describe 'every self referential m:m relationship', :shared => true do
@@ -76,9 +98,7 @@ describe 'every self referential m:m relationship', :shared => true do
     @intermediate_model.create(@intermediate_target => @source_instance, @intermediate_source => @parent_2)
     @source_instance.send(@parents_accessor).size.should == 2
   end
-
 end
-
 
 describe DataMapper::Is::SelfReferential do
 
@@ -169,5 +189,66 @@ describe DataMapper::Is::SelfReferential do
     it_should_behave_like 'every self referential m:m relationship'
 
   end
+
+  describe "with default options for nested model" do
+
+    before(:each) do
+
+      clear_remixed_models 'Main::GroupToGroup'
+
+      Main::Group.is :self_referential
+      DataMapper.auto_migrate!
+
+      @model               = Main::Group
+      @intermediate_model  = Main::GroupToGroup # implicitly test intermediate model generation
+      @intermediate_source = :source
+      @intermediate_target = :target
+      @children_accessor   = :children
+      @parents_accessor    = :parents
+
+      @intermediate_name   = "main_group_#{@children_accessor}".to_sym
+      @target_name         = @children_accessor
+
+      @source_instance     = Main::Group.create(:name => 'Laika')
+
+    end
+
+    it_should_behave_like 'every self referential m:m relationship'
+
+  end
+
+
+  describe "with explict intermediate nested model name and customized options" do
+
+   before(:each) do
+
+      clear_remixed_models 'Main::GroupHeritage'
+
+      Main::Group.is :self_referential, :through => 'Main::GroupHeritage',
+        :children => :child_groups,
+        :parents  => :parent_groups,
+        :source   => :parent_group,
+        :target   => :child_group
+
+      DataMapper.auto_migrate!
+
+      @model               = Main::Group
+      @intermediate_model  = Main::GroupHeritage # implicitly test intermediate model generation
+      @intermediate_source = :parent_group
+      @intermediate_target = :child_group
+      @children_accessor   = :child_groups
+      @parents_accessor    = :parent_groups
+
+      @intermediate_name   = "main_group_#{@children_accessor}".to_sym
+      @target_name         = @children_accessor
+
+      @source_instance     = Main::Group.create(:name => 'Laika')
+
+    end
+
+    it_should_behave_like 'every self referential m:m relationship'
+
+  end
+
 
 end
