@@ -82,22 +82,26 @@ describe 'every self referential m:m relationship', :shared => true do
     @source_instance.send(@parents_accessor).is_a?(DataMapper::Collection).should be_true
   end
 
-
   it "should be able to return all children" do
-    @child_1 = @model.create(:name => 'Bars')
-    @child_2 = @model.create(:name => 'Lisichka')
-    @intermediate_model.create(@intermediate_source => @source_instance, @intermediate_target => @child_1)
-    @intermediate_model.create(@intermediate_source => @source_instance, @intermediate_target => @child_2)
-    @source_instance.send(@children_accessor).size.should == 2
+    pending_if 'M:M operations are not supported in_memory and on yaml', !SUPPORTS_M2M do
+      @child_1 = @model.create(:name => 'Bars')
+      @child_2 = @model.create(:name => 'Lisichka')
+      @intermediate_model.create(@intermediate_source => @source_instance, @intermediate_target => @child_1)
+      @intermediate_model.create(@intermediate_source => @source_instance, @intermediate_target => @child_2)
+      @source_instance.send(@children_accessor).size.should == 2
+    end
   end
 
   it "should be able to return all parents" do
-    @parent_1 = @model.create(:name => 'Belka')
-    @parent_2 = @model.create(:name => 'Strelka')
-    @intermediate_model.create(@intermediate_target => @source_instance, @intermediate_source => @parent_1)
-    @intermediate_model.create(@intermediate_target => @source_instance, @intermediate_source => @parent_2)
-    @source_instance.send(@parents_accessor).size.should == 2
+    pending_if 'M:M operations are not supported in_memory and on yaml', !SUPPORTS_M2M do
+      @parent_1 = @model.create(:name => 'Belka')
+      @parent_2 = @model.create(:name => 'Strelka')
+      @intermediate_model.create(@intermediate_target => @source_instance, @intermediate_source => @parent_1)
+      @intermediate_model.create(@intermediate_target => @source_instance, @intermediate_source => @parent_2)
+      @source_instance.send(@parents_accessor).size.should == 2
+    end
   end
+
 end
 
 describe DataMapper::Is::SelfReferential do
