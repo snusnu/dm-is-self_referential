@@ -11,11 +11,6 @@ begin
     gem.email       = 'gamsnjaga@gmail.com'
     gem.homepage    = 'http://github.com/snusnu/dm-is-self_referential'
     gem.authors     = [ "Martin Gamsjaeger (snusnu)" ]
-
-    gem.add_dependency             'dm-core', '~> 1.0.0'
-
-    gem.add_development_dependency 'rspec',   '~> 1.3'
-    gem.add_development_dependency 'yard',    '~> 0.5'
   end
 
   Jeweler::GemcutterTasks.new

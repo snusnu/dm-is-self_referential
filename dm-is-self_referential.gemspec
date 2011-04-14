@@ -55,9 +55,6 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<yard>, ["~> 0.5"])
       s.add_development_dependency(%q<jeweler>, ["~> 1.5.2"])
       s.add_development_dependency(%q<dm-validations>, ["~> 1.1.0"])
-      s.add_runtime_dependency(%q<dm-core>, ["~> 1.0.0"])
-      s.add_development_dependency(%q<rspec>, ["~> 1.3"])
-      s.add_development_dependency(%q<yard>, ["~> 0.5"])
     else
       s.add_dependency(%q<dm-core>, ["~> 1.1.0"])
       s.add_dependency(%q<rake>, ["~> 0.8.7"])
@@ -65,9 +62,6 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<yard>, ["~> 0.5"])
       s.add_dependency(%q<jeweler>, ["~> 1.5.2"])
       s.add_dependency(%q<dm-validations>, ["~> 1.1.0"])
-      s.add_dependency(%q<dm-core>, ["~> 1.0.0"])
-      s.add_dependency(%q<rspec>, ["~> 1.3"])
-      s.add_dependency(%q<yard>, ["~> 0.5"])
     end
   else
     s.add_dependency(%q<dm-core>, ["~> 1.1.0"])
@@ -76,9 +70,6 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<yard>, ["~> 0.5"])
     s.add_dependency(%q<jeweler>, ["~> 1.5.2"])
     s.add_dependency(%q<dm-validations>, ["~> 1.1.0"])
-    s.add_dependency(%q<dm-core>, ["~> 1.0.0"])
-    s.add_dependency(%q<rspec>, ["~> 1.3"])
-    s.add_dependency(%q<yard>, ["~> 0.5"])
   end
 end
 
