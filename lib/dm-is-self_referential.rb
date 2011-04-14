@@ -14,7 +14,7 @@ module DataMapper
         # deepest_context = "::"
         # self_model_name = ClassName
         deepest_context, self_model_name = (self.name =~ /^(.*::)(.*)$/) ? [$1, $2] : ["::", self.name]
-        sane_self_model_name = ActiveSupport::Inflector.underscore(self.name.gsub(/::/, ""))
+        sane_self_model_name = DataMapper::Inflector.underscore(self.name.gsub(/::/, ""))
 
         options = {
           :through     => "#{deepest_context}#{self_model_name}To#{self_model_name}",
@@ -24,14 +24,14 @@ module DataMapper
           :target      => :target
         }.merge!(options)
 
-        Object.full_const_set(options[:through], Class.new)
+        DataMapper::Ext::Object.full_const_set(options[:through], Class.new)
 
         source_model       = self
-        intermediate_model = Object.full_const_get(options[:through])
+        intermediate_model = DataMapper::Ext::Object.full_const_get(options[:through])
         target_model       = self
 
-        source_fk = ActiveSupport::Inflector.foreign_key(options[:source]).to_sym
-        target_fk = ActiveSupport::Inflector.foreign_key(options[:target]).to_sym
+        source_fk = DataMapper::Inflector.foreign_key(options[:source]).to_sym
+        target_fk = DataMapper::Inflector.foreign_key(options[:target]).to_sym
 
         intermediate_model.class_eval do
           include DataMapper::Resource
